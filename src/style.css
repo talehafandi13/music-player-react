@@ -1,0 +1,12 @@
+.library{
+    width: 28%;
+}
+.main{
+    width: 72%;
+}
+.lib-show{
+    position: absolute;
+    top: 0;
+    left: -40%;
+    transition: ease-in-out 1s;
+}
