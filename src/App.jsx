@@ -1,12 +1,19 @@
-import './App.css';
-import Library from './components/Library'
-import Main from './components/Main';
 import React, {useState, useRef} from 'react';
+import './App.css';
+
+import Library from './components/Library'
+// import Main from './components/Main';
+import Player from './components/Player';
+import Header from './components/Header';
+import {getMusics} from './data/data'
+
 
 
 
 function App() {
-  const [currentSong, setCurrentSong] = useState(null);
+  const data = getMusics();
+
+  const [currentSong, setCurrentSong] = useState(data[0]);
 
 
   const libraryRef = useRef(null);
@@ -29,12 +36,13 @@ function App() {
     <div className="flex justify-between pr-24 relative">
       <Library  libraryRef = {libraryRef} 
                 currentSong={currentSong}
-                setCurrentSong={setCurrentSong} />
-                
-      <Main     mainRef={mainRef} 
-                libraryToggle={libraryToggle} 
-                currentSong={currentSong} 
-                setCurrentSong={setCurrentSong} />
+                setCurrentSong={setCurrentSong} 
+                data={data}
+      />
+      <div ref={mainRef} className="border w-1/2 m-auto">
+        <Header libraryToggle={libraryToggle} />
+        <Player currentSong={currentSong} data={data} />
+      </div>
     </div>
   );
 }
