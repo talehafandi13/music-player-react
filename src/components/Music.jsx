@@ -12,7 +12,7 @@ const Music = ({song, index, setCurrentIndex, setCurrentSong}) => {
   }
 
   return (
-    <div onClick={songToggle} key={data[index].id} className="flex w-80 items-center gap-5 py-4 border hover:bg-slate-100">
+    <div onClick={songToggle} className="flex w-80 items-center gap-5 py-4 border hover:bg-slate-100">
         <img src={data[index].cover} alt="music cover" 
              className="w-24" />
         <div>

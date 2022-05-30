@@ -13,7 +13,8 @@ const Library = ({libraryRef, setCurrentIndex, currentSong, setCurrentSong, data
         <h1 className="text-left text-2xl my-5 font-semibold">Library</h1>
         {
           data.map((el, index) => (
-            <Music 
+            <Music
+                  key={el.id}  
                   song={el} 
                   index={index} 
                   setCurrentIndex={setCurrentIndex} 

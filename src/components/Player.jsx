@@ -12,14 +12,17 @@ const Player = ({data, currentIndex, setCurrentIndex, currentSong, setCurrentSon
 
   const imgRef = useRef(null);
   const volumeRef = useRef(null);
+  const audioRef = useRef(null);
 
   const [volume, setVolume] = React.useState(50)
   const [songState, setSongState] = React.useState(false); // false means song is not playing currently
   const [currentTime, setCurrentTime] = React.useState(0);
 
   
-  
-
+  // Move to helper.js
+  function convertToMinutes(num) {
+      return`${parseInt(num/60)}:${parseInt(num%60)}`;
+  }
   
   // useEffect(() =>{
   //   const time = setTimeout(setCurrentTime(currentTime+=1), 1000);
@@ -29,7 +32,15 @@ const Player = ({data, currentIndex, setCurrentIndex, currentSong, setCurrentSon
   function songToggle() {
     setSongState(prevState => !prevState);
     let imgR = imgRef.current.classList;
-    imgR.contains('animate-spin-slow') ? imgR.remove('animate-spin-slow') : imgR.add('animate-spin-slow');
+    if (imgR.contains('animate-spin-slow')){
+      imgR.remove('animate-spin-slow');
+      audioRef.current.pause();
+    }else {
+      imgR.add('animate-spin-slow');
+      audioRef.current.play();
+    }
+    console.log(audioRef.current.currentTime);
+    
     
     // setCurrentTime(prev=>prev+=10);
     // console.log(currentTime);
@@ -48,7 +59,7 @@ const Player = ({data, currentIndex, setCurrentIndex, currentSong, setCurrentSon
   
   function volumeToggle() {
     let volRef = volumeRef.current.classList;
-    volRef.contains('hidden') ? volRef.remove('hidden') : volRef.add('hidden')
+    volRef.contains('hidden') ? volRef.remove('hidden') : volRef.add('hidden');
   }
 
   function test(e) {
@@ -63,9 +74,17 @@ const Player = ({data, currentIndex, setCurrentIndex, currentSong, setCurrentSon
         <h1 className="text-xl font-semibold my-4"> {currentSong.name} </h1>
         <h3 className="text-sm">{currentSong.artist}</h3>
 
-        <audio src={currentSong.audio}></audio>
+        <audio ref={audioRef} src={currentSong.audio}></audio>
 
-        <input type="range" min='0' max='100' value={currentTime} />
+        <div className="flex items-center gap-x-2">
+          <p>0:00</p>
+          <div className={`flex w-full h-full rounded-xl`}>
+            <input  type="range" min='0' max='200'  
+                    className="h-full w-full"
+                   />
+          </div>
+          <p>{audioRef?.current?.duration ? convertToMinutes(audioRef?.current?.duration) : '0:00'}</p>
+        </div>
 
         <div className="controls
                     flex flex-row items-center w-3/4 mx-auto my-10 justify-around">
@@ -75,7 +94,8 @@ const Player = ({data, currentIndex, setCurrentIndex, currentSong, setCurrentSon
             <GrFormNext size="30" onClick={next} />
             <div className="flex gap-x-5">
                 <HiVolumeUp onClick={volumeToggle}/>
-                <input type="range" value={volume} onChange={test} ref={volumeRef}  />
+                <input  type="range" value={volume} onChange={test} ref={volumeRef}  
+                       />
             </div>
           </div>
 
