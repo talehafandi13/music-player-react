@@ -13,7 +13,8 @@ import {getMusics} from './data/data'
 function App() {
   const data = getMusics();
 
-  const [currentSong, setCurrentSong] = useState(data[0]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentSong, setCurrentSong] = useState(data[currentIndex]);
 
 
   const libraryRef = useRef(null);
@@ -37,11 +38,17 @@ function App() {
       <Library  libraryRef = {libraryRef} 
                 currentSong={currentSong}
                 setCurrentSong={setCurrentSong} 
+                currentIndex={currentIndex}
+                setCurrentIndex={setCurrentIndex}
                 data={data}
       />
-      <div ref={mainRef} className="border w-1/2 m-auto">
+      <div ref={mainRef} className="w-1/2 m-auto">
         <Header libraryToggle={libraryToggle} />
-        <Player currentSong={currentSong} data={data} />
+        <Player currentIndex={currentIndex}
+                setCurrentIndex={setCurrentIndex}
+                currentSong={currentSong} 
+                setCurrentSong={setCurrentSong}
+                data={data} />
       </div>
     </div>
   );
