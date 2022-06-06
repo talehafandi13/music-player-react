@@ -1,4 +1,4 @@
-import React, {useRef, useEffect} from 'react'
+import React, {useRef, useEffect, useState} from 'react'
 // import {getMusics} from '../data/data'
 import {FaPlay} from 'react-icons/fa'
 import {GrFormPrevious} from 'react-icons/gr'
@@ -24,6 +24,8 @@ const Player = ({data, currentIndex, setCurrentIndex, currentSong, setCurrentSon
       return`${parseInt(num/60)}:${parseInt(num%60)}`;
   }
   
+  
+
   // useEffect(() =>{
   //   const time = setTimeout(setCurrentTime(currentTime+=1), 1000);
   //   return () => {clearTimeout(time)}
@@ -39,7 +41,7 @@ const Player = ({data, currentIndex, setCurrentIndex, currentSong, setCurrentSon
       imgR.add('animate-spin-slow');
       audioRef.current.play();
     }
-    console.log(audioRef.current.currentTime);
+    // console.log(audioRef.current.currentTime);
     
     
     // setCurrentTime(prev=>prev+=10);
@@ -49,12 +51,33 @@ const Player = ({data, currentIndex, setCurrentIndex, currentSong, setCurrentSon
   
   function prev() {
       currentIndex>0 && setCurrentIndex((prev)=>prev -= 1);
+      console.log(audioRef.current);
+      // audioRef.current.play();
+      // audioRef.current.play();
+    }
+    const [test, setTest] = useState(false)
+    
+    useEffect(()=>{
       setCurrentSong(data[currentIndex]);
-  }
+      if(currentIndex!==0){
+
+        setTest(true)
+      }
+  },[currentIndex, test])
+
   
+useEffect(()=>{
+  console.log(test)
+  if(test){
+    audioRef.current.play();
+  }
+},[currentSong, test])
+
   function next() {
     currentIndex<data.length-1 && setCurrentIndex((prev)=>prev += 1);
-    setCurrentSong(data[currentIndex]);
+    console.log(audioRef.current);
+    // audioRef.current.play();
+    // setCurrentSong(data[currentIndex]);
   }
   
   function volumeToggle() {
@@ -62,10 +85,18 @@ const Player = ({data, currentIndex, setCurrentIndex, currentSong, setCurrentSon
     volRef.contains('hidden') ? volRef.remove('hidden') : volRef.add('hidden');
   }
 
-  function test(e) {
-    setVolume(e.target.value)
+  function handleVolume(e) {
+    setVolume(e.target.value);
+    audioRef.current.volume = volume/100;
+    console.log(volume, e.target.value);
     // console.log(volume);
   }
+
+  // useEffect(()=>{
+  //   setCurrentTime(audioRef.current.currentTime);
+  //   console.log(currentTime);
+  // }, [currentTime, audioRef.current.currentTime])
+
 
   return (
     <div className="w-full text-center mt-24">
@@ -77,7 +108,7 @@ const Player = ({data, currentIndex, setCurrentIndex, currentSong, setCurrentSon
         <audio ref={audioRef} src={currentSong.audio}></audio>
 
         <div className="flex items-center gap-x-2">
-          <p>0:00</p>
+          <p>{audioRef?.current?.currentTime ? convertToMinutes(audioRef?.current?.currentTime) : '0:00'}</p>
           <div className={`flex w-full h-full rounded-xl`}>
             <input  type="range" min='0' max='200'  
                     className="h-full w-full"
@@ -94,7 +125,7 @@ const Player = ({data, currentIndex, setCurrentIndex, currentSong, setCurrentSon
             <GrFormNext size="30" onClick={next} />
             <div className="flex gap-x-5">
                 <HiVolumeUp onClick={volumeToggle}/>
-                <input  type="range" value={volume} onChange={test} ref={volumeRef}  
+                <input  type="range" value={volume} onChange={handleVolume} ref={volumeRef}  
                        />
             </div>
           </div>
